@@ -34,7 +34,7 @@ Authorization: Bearer <your-token>
 
 #### Endpoints
 
-##### POST /start-spider
+##### POST /scrape
 Initiates the dental product scraping process.
 
 **Request Body:**
@@ -123,16 +123,20 @@ The scraper collects the following information for each product:
    poetry install
    ```
 
-2. Configure environment variables:
-   ```
-   BEARER_TOKEN=<your-token>
-   REDIS_URL=<redis-connection-string>
+2. Start the API server:
+   ```bash
+   uvicorn api.main:app --reload --port=8000
    ```
 
-3. Start the API server:
-   ```bash
-   uvicorn api.main:app --reload
-   ```
+3. Start websocket:
+    ```bash
+    uvicorn api.websocket:app --reload --port=8123
+    ```
+
+4. For Running scraper only
+    ```bash
+    scrapy crawl dental_crawler -O output.json
+    ```
 
 ## Error Handling
 
