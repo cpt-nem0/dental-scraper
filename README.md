@@ -79,8 +79,9 @@ The scraper collects the following information for each product:
 ```python
 {
     "product_title": str,    # Title of the dental product
-    "product_price": float,  # Current price
-    "path_to_image": str     # URL or path to product image
+    "product_price": float,   # Current price
+    "image_url": str         # URL or path to product image
+    "local_path": str        # path of image saved on the local directory
 }
 ```
 
@@ -96,13 +97,22 @@ The scraper collects the following information for each product:
   }
   ```
 
-#### 2. JSON Export Pipeline
+#### 2. Image Download Pipeline
+- Downloads product images to local directory
+- Configuration in `settings.py`:
+  ```python
+  ITEM_PIPELINES = {
+      'scraper.pipelines.ImageDownloadPipeline': 400
+  }
+  ```
+
+#### 3. JSON Export Pipeline
 - Stores scraped data in JSON format
 - Configurable export path through API settings
 - Configuration in `settings.py`:
   ```python
   ITEM_PIPELINES = {
-      'scraper.pipelines.JsonExportPipeline': 400
+      'scraper.pipelines.JsonExportPipeline': 500
   }
   ```
 

@@ -9,15 +9,13 @@ import os
 from datetime import datetime
 
 import redis
+import requests
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 
-
-class ScraperPipeline:
-    def process_item(self, item, spider):
-        return item
+from .utils import convert_to_filename
 
 
 class JsonStoragePipeline:
@@ -66,6 +64,24 @@ class JsonStoragePipeline:
     def from_crawler(cls, crawler):
         filename = crawler.settings.get("JSON_FILENAME")
         return cls(filename)
+
+
+class ImageDownloadPipeline:
+    def __init__(self):
+        self.image_dump_path = "data/image_dump"
+        os.makedirs(self.image_dump_path, exist_ok=True)
+
+    def process_item(self, item, spider):
+        if img_url := item["image_url"]:
+            image_data = requests.get(img_url).content
+            image_file_name = convert_to_filename(item["product_title"])
+            image_path = f"{self.image_dump_path}/{image_file_name}.jpg"
+            with open(image_path, "wb") as file:
+                file.write(image_data)
+
+            item["local_path"] = image_path
+
+        return item
 
 
 class RedisCachePipeline:

@@ -52,9 +52,10 @@ class DentalCrawler(scrapy.Spider):
                     "div.mf-product-thumbnail img::attr(title)"
                 ).get(),
                 product_price=product.css("div.mf-product-details bdi::text").get(),
-                path_to_image=product.css(
+                image_url=product.css(
                     "div.mf-product-thumbnail img::attr(data-lazy-src)"
                 ).get(),
+                local_path=None,
             )
 
         # Check page limit
